@@ -5,9 +5,11 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
-    private static final String URL = "jdbc:mysql://localhost:3306/studentdb";
+    private static final String URL =
+            "jdbc:mysql://mysql.railway.internal:3306/railway?useSSL=false&allowPublicKeyRetrieval=true";
+
     private static final String USER = "root";
-    private static final String PASSWORD = "root"; // change if needed
+    private static final String PASSWORD = "VStvBnvoecnYbntrbogMvNVZFxkiZANM";
 
     public static Connection getConnection() {
 
