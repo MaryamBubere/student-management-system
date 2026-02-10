@@ -1,14 +1,13 @@
-<%@page import="java.sql.*"%>
-<%@page import="util.DBConnection"%>
+<%@ page import="java.sql.*" %>
+<%@ page import="util.DBConnection" %>
 
-<%
-Connection con = DBConnection.getConnection();
-Statement st = con.createStatement();
+<html>
+<head>
+    <title>Course Data</title>
+</head>
+<body>
 
-ResultSet rs = st.executeQuery("select * from course");
-%>
-
-<h2>Course List</h2>
+<h2>Courses</h2>
 
 <table border="1">
 <tr>
@@ -17,14 +16,22 @@ ResultSet rs = st.executeQuery("select * from course");
 </tr>
 
 <%
-while(rs.next()){
+Connection con = DBConnection.getConnection();
+Statement st = con.createStatement();
+ResultSet rs = st.executeQuery("SELECT * FROM course");
+
+while (rs.next()) {
 %>
 <tr>
-    <td><%=rs.getInt("id")%></td>
-    <td><%=rs.getString("name")%></td>
+    <td><%= rs.getInt("id") %></td>
+    <td><%= rs.getString("name") %></td>
 </tr>
 <%
 }
 con.close();
 %>
+
 </table>
+
+</body>
+</html>
