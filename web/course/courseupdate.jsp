@@ -1,74 +1,102 @@
-
-<%-- 
-    Document   : course
-    Created on : 30-Jan-2025, 7:12:10 pm
-    Author     : Dell
---%>
-<%@page import="java.sql.DriverManager"%>
-<%@page import="java.sql.*"%> 
-
+<%@page import="java.sql.*"%>
+<%@page import="util.DBConnection"%>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    </head>
-    <body>
-        <h1>Course</h1>
-        <div class="row">
-            <div class="col-sm-4">
-                <form method="POST" align="left" action="coursedata.jsp">
-                    <%
-                     Connection con;
-                     PreparedStatement pst;
-                     ResultSet rs;
-                            
-                     Class.forName("com.mysql.jdbc.Driver");
-                     con = DriverManager.getConnection("jdbc:mysql://localhost/studentmanagement", "root", "root75");
-                     
-                     String id = request.getParameter("id");
-                     
-                     pst = con.prepareStatement("select * from course where id = ?");
-                     pst.setString(1, id);
-                     rs = pst.executeQuery();
-                     
-                     while(rs.next())
-                     {
-                    
-                    %>
-                    <div>
-                        <lable class="form-label">Course Id</lable>
-                        <input type="text" id="id" placeholder="Course Id" class="form-control" name="id" value="<%= rs.getString("id") %>" required>
-                    </div>
-                    
-                    <div>
-                        <lable class="form-label">Course Name</lable>
-                        <input type="text" id="name" placeholder="Course Name" class="form-control" name="name" value="<%= rs.getString("course_name") %>" required>
-                    </div>
-                    
-                    <div>
-                        <lable class="form-label">Duration</lable>
-                        <input type="text" id="duration" placeholder="Duration" class="form-control" name="duration" value="<%= rs.getString("duration") %>" required>
-                    </div>
-                    
-                    <div>
-                        <input type="submit" name="submit" class="btn btn-info" value="submit">
-                        <input type="reset" name="reset" class="btn btn-warning" value="reset" >
-                    </div>
-                </form>>
-                
-            </div>
-            <div class="col-sm-8">
-            
-            <% } %>
-                        
-                        
-                 
-            </div>
-        </div>
-        
-    </body>
-</html>
+<head>
 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>Update Course</title>
+
+<!-- RESTORED ORIGINAL BOOTSTRAP CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<div class="container mt-3">
+
+<h2>Update Course</h2>
+
+<div class="row">
+
+<div class="col-sm-4">
+
+<form method="POST" action="courseupdateprocess.jsp">
+
+<%
+Connection con = null;
+PreparedStatement pst = null;
+ResultSet rs = null;
+
+try {
+
+    con = DBConnection.getConnection();
+
+    String id = request.getParameter("id");
+
+    pst = con.prepareStatement("SELECT * FROM course WHERE id = ?");
+
+    pst.setString(1, id);
+
+    rs = pst.executeQuery();
+
+    if(rs.next()) {
+%>
+
+<div class="mb-2">
+<label class="form-label">Course Id</label>
+<input type="text" class="form-control" name="id"
+value="<%= rs.getString("id") %>" readonly>
+</div>
+
+<div class="mb-2">
+<label class="form-label">Course Name</label>
+<input type="text" class="form-control" name="name"
+value="<%= rs.getString("course_name") %>" required>
+</div>
+
+<div class="mb-2">
+<label class="form-label">Duration</label>
+<input type="text" class="form-control" name="duration"
+value="<%= rs.getString("duration") %>" required>
+</div>
+
+<div class="mt-2">
+<input type="submit" class="btn btn-info" value="Update">
+<a href="course.jsp" class="btn btn-warning">Cancel</a>
+</div>
+
+<%
+    }
+
+} catch(Exception e) {
+%>
+
+<p style="color:red;">
+Error: <%= e.getMessage() %>
+</p>
+
+<%
+} finally {
+
+    try { if(rs!=null) rs.close(); } catch(Exception e){}
+    try { if(pst!=null) pst.close(); } catch(Exception e){}
+    try { if(con!=null) con.close(); } catch(Exception e){}
+
+}
+%>
+
+</form>
+
+</div>
+
+</div>
+
+</div>
+
+</body>
+</html>

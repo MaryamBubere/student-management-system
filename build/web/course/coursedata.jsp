@@ -1,37 +1,116 @@
-<%@ page import="java.sql.*" %>
-<%@ page import="util.DBConnection" %>
+<%@page import="java.sql.*"%>
+<%@page import="util.DBConnection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
+<!DOCTYPE html>
 <html>
 <head>
-    <title>Course Data</title>
+
+<title>Course Data</title>
+
+<!-- RESTORED ORIGINAL BOOTSTRAP CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+.small-btn {
+    padding: 2px 8px;
+    font-size: 12px;
+}
+</style>
+
 </head>
+
 <body>
 
-<h2>Courses</h2>
+<div class="container mt-3">
 
-<table border="1">
+<h2>Course List</h2>
+
+<table class="table table-bordered table-striped">
+
+<thead>
 <tr>
     <th>ID</th>
-    <th>Name</th>
+    <th>Course Name</th>
+    <th>Duration</th>
+    <th>Edit</th>
+    <th>Delete</th>
 </tr>
+</thead>
+
+<tbody>
 
 <%
-Connection con = DBConnection.getConnection();
-Statement st = con.createStatement();
-ResultSet rs = st.executeQuery("SELECT * FROM course");
+Connection con = null;
+Statement st = null;
+ResultSet rs = null;
 
-while (rs.next()) {
+try {
+
+    con = DBConnection.getConnection();
+
+    st = con.createStatement();
+
+    rs = st.executeQuery("SELECT * FROM course");
+
+    while(rs.next()) {
+
+        String id = rs.getString("id");
 %>
+
 <tr>
-    <td><%= rs.getInt("id") %></td>
-    <td><%= rs.getString("name") %></td>
+
+<td><%= rs.getString("id") %></td>
+
+<td><%= rs.getString("course_name") %></td>
+
+<td><%= rs.getString("duration") %></td>
+
+<td>
+<a href="courseupdate.jsp?id=<%=id%>" class="btn btn-warning btn-sm">
+Edit
+</a>
+</td>
+
+<td>
+<a href="coursedelete.jsp?id=<%=id%>" class="btn btn-danger btn-sm">
+Delete
+</a>
+</td>
+
 </tr>
+
 <%
-}
-con.close();
+    }
+
+} catch(Exception e) {
 %>
+
+<tr>
+<td colspan="5" style="color:red;">
+Database Error: <%= e.getMessage() %>
+</td>
+</tr>
+
+<%
+} finally {
+
+    try { if(rs!=null) rs.close(); } catch(Exception e){}
+    try { if(st!=null) st.close(); } catch(Exception e){}
+    try { if(con!=null) con.close(); } catch(Exception e){}
+
+}
+%>
+
+</tbody>
 
 </table>
+
+<a href="course.jsp" class="btn btn-info small-btn">
+Back
+</a>
+
+</div>
 
 </body>
 </html>

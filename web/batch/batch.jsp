@@ -55,12 +55,12 @@
                         </tr>
                         <tbody>
                             <%
-                            Connection con;
+                            Connection con= DBConnection.getConnection();
                             PreparedStatement pst;
                             ResultSet rs;
                             
                             Class.forName("com.mysql.jdbc.Driver");
-                            con = DriverManager.getConnection("jdbc:mysql://localhost/studentmanagement", "root", "root75");
+                            
                             String query = "select * from batch";
                             Statement st = con.createStatement();
                             rs = st.executeQuery(query);

@@ -1,21 +1,32 @@
- <%@page import="java.sql.*"%>
- <%Class.forName("com.mysql.jdbc.Driver");%>
- 
- <%
- String batchid= request.getParameter("id");
- 
- Connection con;
- PreparedStatement pst;
- 
-Class.forName("com.mysql.jdbc.Driver");
-con = DriverManager.getConnection("jdbc:mysql://localhost/studentmanagement","root","root75");
-pst = con.prepareStatement("delete from course where id=?");
+<%@page import="java.sql.*"%>
+<%@page import="util.DBConnection"%>
 
+<%
+Connection con = null;
+PreparedStatement pst = null;
 
-pst.setString(1, batchid);
-pst.executeUpdate();
+try {
 
-String redirect= "course.jsp";
-response.sendRedirect(redirect);
+    String id = request.getParameter("id");
 
- %>
+    con = DBConnection.getConnection();
+
+    pst = con.prepareStatement("DELETE FROM course WHERE id = ?");
+
+    pst.setString(1, id);
+
+    pst.executeUpdate();
+
+    response.sendRedirect("course.jsp");
+
+} catch(Exception e) {
+
+    out.println("<h3 style='color:red;'>Error deleting record: " + e.getMessage() + "</h3>");
+
+} finally {
+
+    try { if(pst!=null) pst.close(); } catch(Exception e){}
+    try { if(con!=null) con.close(); } catch(Exception e){}
+
+}
+%>

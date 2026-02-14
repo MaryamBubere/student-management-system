@@ -1,17 +1,36 @@
 <%@page import="java.sql.*"%>
 <%@page import="util.DBConnection"%>
+<%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <%
-String name = request.getParameter("name");
+Connection con = null;
+PreparedStatement pst = null;
 
-Connection con = DBConnection.getConnection();
-PreparedStatement ps = con.prepareStatement("insert into batch(name) values(?)");
+try {
 
-ps.setString(1, name);
+    String name = request.getParameter("name");
 
-ps.executeUpdate();
+    con = DBConnection.getConnection();
 
-response.sendRedirect("batchdata.jsp");
+    pst = con.prepareStatement(
+        "INSERT INTO batch(name) VALUES (?)"
+    );
 
-con.close();
+    pst.setString(1, name);
+
+    pst.executeUpdate();
+
+    // redirect back to batch main page (original behavior)
+    response.sendRedirect("batch.jsp");
+
+} catch(Exception e) {
+
+    out.println("<h3 style='color:red;'>Error: " + e.getMessage() + "</h3>");
+
+} finally {
+
+    try { if(pst!=null) pst.close(); } catch(Exception e){}
+    try { if(con!=null) con.close(); } catch(Exception e){}
+
+}
 %>

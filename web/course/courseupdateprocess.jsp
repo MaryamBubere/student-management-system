@@ -8,12 +8,18 @@ PreparedStatement pst = null;
 try {
 
     String id = request.getParameter("id");
+    String name = request.getParameter("name");
+    String duration = request.getParameter("duration");
 
     con = DBConnection.getConnection();
 
-    pst = con.prepareStatement("DELETE FROM course WHERE id = ?");
+    pst = con.prepareStatement(
+    "UPDATE course SET course_name=?, duration=? WHERE id=?"
+    );
 
-    pst.setString(1, id);
+    pst.setString(1, name);
+    pst.setString(2, duration);
+    pst.setString(3, id);
 
     pst.executeUpdate();
 
@@ -21,7 +27,7 @@ try {
 
 } catch(Exception e) {
 
-    out.println("<h3 style='color:red;'>Error deleting record: " + e.getMessage() + "</h3>");
+    out.println("Error: " + e.getMessage());
 
 } finally {
 
