@@ -8,24 +8,26 @@ PreparedStatement pst = null;
 
 try {
 
-    String name = request.getParameter("name");
+    String batchname = request.getParameter("bname");
+    String year = request.getParameter("year");
 
     con = DBConnection.getConnection();
 
     pst = con.prepareStatement(
-        "INSERT INTO batch(name) VALUES (?)"
+        "INSERT INTO batch(batchname, year) VALUES (?, ?)"
     );
 
-    pst.setString(1, name);
+    pst.setString(1, batchname);
+    pst.setString(2, year);
 
     pst.executeUpdate();
 
-    // redirect back to batch main page (original behavior)
     response.sendRedirect("batch.jsp");
 
 } catch(Exception e) {
 
-    out.println("<h3 style='color:red;'>Error: " + e.getMessage() + "</h3>");
+    out.println("<h3 style='color:red;'>Error: "
+        + e.getMessage() + "</h3>");
 
 } finally {
 
