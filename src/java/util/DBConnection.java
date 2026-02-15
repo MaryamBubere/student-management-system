@@ -5,6 +5,14 @@ import java.sql.DriverManager;
 
 public class DBConnection {
 
+    // Railway PUBLIC MySQL connection
+    private static final String URL =
+        "jdbc:mysql://shortline.proxy.rlwy.net:55061/railway?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+
+    private static final String USER = "root";
+
+    private static final String PASSWORD = "VStvBnvoecnYbntrbogMvNVZFxkiZANM";
+
     public static Connection getConnection() {
 
         Connection con = null;
@@ -13,33 +21,15 @@ public class DBConnection {
 
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            String host = System.getenv("MYSQLHOST");
+            con = DriverManager.getConnection(URL, USER, PASSWORD);
 
-            if (host != null) {
-
-                // Railway database
-                String port = System.getenv("MYSQLPORT");
-                String db = System.getenv("MYSQLDATABASE");
-                String user = System.getenv("MYSQLUSER");
-                String password = System.getenv("MYSQLPASSWORD");
-
-                String url = "jdbc:mysql://" + host + ":" + port + "/" + db;
-
-                con = DriverManager.getConnection(url, user, password);
-
-            } else {
-
-                // Local database
-                String url = "jdbc:mysql://localhost:3306/studentmanagement";
-                String user = "root";
-                String password = "root75";
-
-                con = DriverManager.getConnection(url, user, password);
-
+            if (con != null) {
+                System.out.println("Database Connected Successfully");
             }
 
         } catch (Exception e) {
 
+            System.out.println("Database Connection Failed");
             e.printStackTrace();
 
         }
